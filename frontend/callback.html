@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Green Computer – Autenticando...</title>
+  <script src="https://cdn.auth0.com/js/auth0-spa-js/2.0/auth0-spa-js.production.js"></script>
+  <style>
+    body {
+      background: #0d1117;
+      color: #e6edf3;
+      font-family: 'DM Sans', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .spinner {
+      width: 40px; height: 40px;
+      border: 3px solid rgba(255,255,255,0.1);
+      border-top-color: #4dffa0;
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    p { color: #8b949e; font-size: 15px; }
+
+    .error-box {
+      display: none;
+      background: #111827;
+      border: 1px solid rgba(255,92,106,0.3);
+      border-radius: 16px;
+      padding: 40px;
+      max-width: 480px;
+      width: 90%;
+      text-align: center;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .error-box.show { display: flex; }
+    .error-icon { font-size: 40px; }
+    .error-title { font-size: 20px; font-weight: 700; color: #fff; }
+    .error-msg {
+      background: rgba(255,92,106,0.1);
+      border: 1px solid rgba(255,92,106,0.3);
+      color: #ff5c6a;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+    }
+    .btn {
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      width: 100%;
+    }
+    .btn-primary { background: #1a7a4a; color: #fff; }
+    .btn-primary:hover { background: #1f9459; }
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.2);
+      color: rgba(255,255,255,0.7);
+    }
+  </style>
+</head>
+<body>
+  <div class="spinner" id="spinner"></div>
+  <p id="loading-text">Autenticando con Google...</p>
+
+  <div class="error-box" id="error-box">
+    <div class="error-icon">⚠️</div>
+    <div class="error-title">No encontramos tu cuenta</div>
+    <div class="error-msg" id="error-msg"></div>
+    <button class="btn btn-primary" onclick="window.location.href='index.html'">
+      Iniciar sesión con cuenta Green Computer
+    </button>
+    <button class="btn btn-ghost" style="margin-top:4px" onclick="window.location.href='index.html'">
+      Crear cuenta nueva
+    </button>
+  </div>
+
+  <script>
+    const API = 'http://localhost:8000';
+
+    const auth0Config = {
+      domain: "dev-syfyk7fe0keqki83.us.auth0.com",
+      clientId: "zjQuX10YQZNO7pHt9GGYKiuKWFdGXHn9",
+      authorizationParams: {
+        redirect_uri: "http://localhost:5500/callback.html"
+      }
+    };
+
+    async function handleCallback() {
+      try {
+        const client = await auth0.createAuth0Client(auth0Config);
+        await client.handleRedirectCallback();
+
+        const user = await client.getUser();
+
+        // Llamar al backend con el email de Google
+        const res = await fetch(`${API}/auth/login-google`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: user.email,
+            name:  user.name
+          })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          // Usuario no registrado → mostrar error
+          document.getElementById('spinner').style.display     = 'none';
+          document.getElementById('loading-text').style.display = 'none';
+          document.getElementById('error-msg').textContent     = data.detail || 'Error al iniciar sesión.';
+          document.getElementById('error-box').classList.add('show');
+          return;
+        }
+
+        // Guardar token y usuario en localStorage
+        localStorage.setItem('token', data.access_token);
+        localStorage.setItem('user', JSON.stringify(data.user));
+
+        // Redirigir al dashboard
+        window.location.href = 'pages/dashboard.html';
+
+      } catch (error) {
+        console.error('Error en callback:', error);
+        window.location.href = 'index.html';
+      }
+    }
+
+    handleCallback();
+  </script>
+</body>
+</html>

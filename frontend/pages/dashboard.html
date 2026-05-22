@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Green Computer – Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <style>
+    .nav-icon svg { width:18px; height:18px; stroke:currentColor; fill:none; stroke-width:1.8; vertical-align:middle; }
+    .kpi-icon svg { width:22px; height:22px; stroke:currentColor; fill:none; stroke-width:1.8; }
+    .co2-card .icon svg { width:28px; height:28px; stroke:currentColor; fill:none; stroke-width:1.5; }
+    .tc-icon svg { width:36px; height:36px; stroke:currentColor; fill:none; stroke-width:1.5; }
+    .logo-svg { width:28px; height:28px; }
+  </style>
+</head>
+<body>
+
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <!-- Leaf icon SVG -->
+    <svg class="logo-svg" viewBox="0 0 24 24" fill="none" stroke="#4dffa0" stroke-width="1.8">
+      <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/>
+      <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+    </svg>
+    <div class="brand-name">Green<span>Computer</span></div>
+  </div>
+  <nav>
+    <div class="nav-section">Principal</div>
+    <div class="nav-item active" onclick="showSection('sec-contratos')">
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      </span> Mis Contratos
+    </div>
+    <div class="nav-item" onclick="showSection('sec-tickets')">
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      </span> Tickets
+    </div>
+    <div class="nav-item" onclick="showSection('sec-co2')">
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
+      </span> Huella de CO&#8322;
+    </div>
+    <div class="nav-item" onclick="showSection('sec-equipos')">
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      </span> Mis Equipos
+    </div>
+    <div class="nav-section">Cuenta</div>
+    <div class="nav-item" onclick="showSection('sec-perfil')">
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </span> Mi Perfil
+    </div>
+  </nav>
+  <div class="sidebar-user">
+    <div class="user-info">
+      <div class="user-avatar" id="ua">?</div>
+      <div>
+        <div class="user-name" id="un">Cargando...</div>
+        <div class="user-role">Cliente</div>
+      </div>
+    </div>
+    <button class="btn-logout" onclick="logout()">Cerrar sesión</button>
+  </div>
+</aside>
+
+<main class="main">
+  <header class="topbar">
+    <div>
+      <div class="topbar-title" id="page-title">Mis Contratos</div>
+      <div class="topbar-sub"   id="page-sub">Historial completo de alquileres</div>
+    </div>
+    <div class="topbar-right">
+      <div class="badge-co2">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:5px"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/></svg>
+        CO&#8322; evitado: <strong id="co2-badge">...</strong>
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTRATOS -->
+  <section class="section active" id="sec-contratos">
+    <div class="kpi-grid">
+      <div class="kpi">
+        <div class="kpi-icon">
+          <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div class="kpi-value" id="kpi-vigentes">-</div>
+        <div class="kpi-label">Vigentes</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div class="kpi-value" id="kpi-pendientes">-</div>
+        <div class="kpi-label">Pendientes</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-icon">
+          <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
+        <div class="kpi-value" id="kpi-terminados">-</div>
+        <div class="kpi-label">Terminados</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-icon">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <div class="kpi-value" id="kpi-total">-</div>
+        <div class="kpi-label">Total contratos</div>
+      </div>
+    </div>
+    <div class="section-title">Historial de Contratos</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>#</th><th>Equipo</th><th>Inicio</th><th>Fin</th><th>Valor</th><th>Estado</th></tr></thead>
+        <tbody id="tbody-contratos"><tr><td colspan="6"><div class="loading-spinner"><div class="spinner"></div>Cargando...</div></td></tr></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- TICKETS -->
+  <section class="section" id="sec-tickets">
+    <div class="ticket-types">
+      <div class="ticket-card" onclick="openTicketForm('consulta')">
+        <div class="tc-icon">
+          <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <h3>Ticket de Consulta</h3>
+        <p>Preguntas, dudas o información sobre tu contrato o equipo.</p>
+      </div>
+      <div class="ticket-card" onclick="openTicketForm('garantia')">
+        <div class="tc-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <h3>Garantía de Producto</h3>
+        <p>Reportá un defecto o fallo para hacer valer tu garantía.</p>
+      </div>
+    </div>
+    <div class="ticket-form" id="ticket-form">
+      <h3 style="font-family:'Syne',sans-serif;font-weight:700;margin-bottom:16px" id="tf-title">Nuevo Ticket</h3>
+      <div id="tf-ok" class="success-flash"></div>
+      <div class="field">
+        <label>Equipo relacionado</label>
+        <select id="tf-equipo"><option value="">Seleccioná un equipo</option></select>
+      </div>
+      <div class="field">
+        <label>Asunto</label>
+        <input type="text" id="tf-asunto" placeholder="Describí brevemente el tema"/>
+      </div>
+      <div class="field">
+        <label>Detalle</label>
+        <textarea id="tf-detalle" placeholder="Describí con más detalle tu consulta o problema..."></textarea>
+      </div>
+      <div style="display:flex;gap:10px">
+        <button class="btn btn-sm" onclick="submitTicket()">Enviar Ticket</button>
+        <button class="btn btn-sm btn-outline" onclick="closeTicketForm()">Cancelar</button>
+      </div>
+    </div>
+    <div class="section-title" style="margin-top:28px">Mis Tickets</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>#</th><th>Tipo</th><th>Equipo</th><th>Asunto</th><th>Fecha</th><th>Estado</th><th>Acciones</th></tr></thead>
+        <tbody id="tbody-tickets"><tr><td colspan="7"><div class="loading-spinner"><div class="spinner"></div>Cargando...</div></td></tr></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- CO2 -->
+  <section class="section" id="sec-co2">
+    <div class="co2-big">
+      <div class="co2-number" id="co2-total">...</div>
+      <div class="co2-unit">kg de CO&#8322; evitados</div>
+      <div class="co2-desc">Gracias a tu elección de alquilar en lugar de comprar, contribuís activamente a reducir la huella de carbono del sector tecnológico.</div>
+    </div>
+    <div class="co2-grid">
+      <div class="co2-card">
+        <div class="icon">
+          <svg viewBox="0 0 24 24"><path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v3"/><rect x="9" y="11" width="14" height="10" rx="2"/><circle cx="12" cy="16" r="1"/></svg>
+        </div>
+        <div class="val" id="co2-km">...</div>
+        <div class="lbl">Km en auto equivalentes</div>
+      </div>
+      <div class="co2-card">
+        <div class="icon">
+          <svg viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
+        </div>
+        <div class="val" id="co2-trees">...</div>
+        <div class="lbl">Árboles equivalentes</div>
+      </div>
+      <div class="co2-card">
+        <div class="icon">
+          <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        </div>
+        <div class="val" id="co2-kwh">...</div>
+        <div class="lbl">kWh de energía ahorrada</div>
+      </div>
+      <div class="co2-card">
+        <div class="icon">
+          <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </div>
+        <div class="val" id="co2-devices">...</div>
+        <div class="lbl">Dispositivos no fabricados</div>
+      </div>
+    </div>
+    <div class="table-wrap" style="margin-top:28px">
+      <table>
+        <thead><tr><th>Equipo</th><th>Días alquilado</th><th>CO&#8322; evitado (kg)</th><th>Equivalencia</th></tr></thead>
+        <tbody id="tbody-co2"></tbody>
+      </table>
+    </div>
+    <div class="co2-api-note">Datos calculados vía Climatiq API · Estimaciones basadas en ciclo de vida de fabricación de equipos.</div>
+  </section>
+
+  <!-- EQUIPOS -->
+  <section class="section" id="sec-equipos">
+    <div class="equip-grid" id="equip-grid">
+      <div class="loading-spinner"><div class="spinner"></div>Cargando equipos...</div>
+    </div>
+  </section>
+
+  <!-- PERFIL -->
+  <section class="section" id="sec-perfil">
+    <div class="section-title">Mi Perfil</div>
+    <div class="change-pass-form" style="max-width:500px;margin-bottom:24px">
+      <div class="success-flash" id="perfil-ok"></div>
+      <div class="error-flash"   id="perfil-err"></div>
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px">
+        <div style="width:60px;height:60px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:24px;font-weight:700" id="perfil-avatar">?</div>
+        <div>
+          <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700" id="perfil-nombre-display">...</div>
+          <div style="font-size:13px;color:var(--muted)" id="perfil-email-display">...</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px" id="perfil-desde">...</div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Nombre</label>
+        <input type="text" id="pf-nombre" placeholder="Tu nombre"/>
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <input type="email" id="pf-email" placeholder="tu@email.com"/>
+      </div>
+      <div style="display:flex;gap:10px">
+        <button class="btn btn-sm" onclick="updatePerfil()">Guardar cambios</button>
+        <button class="btn btn-sm btn-outline" onclick="loadPerfil()">Cancelar</button>
+      </div>
+    </div>
+
+    <div class="section-title">Cambiar Contraseña</div>
+    <div class="change-pass-form" style="max-width:420px;margin-bottom:24px">
+      <div class="success-flash" id="pass-ok"></div>
+      <div class="error-flash"   id="pass-err"></div>
+      <div class="field">
+        <label>Contraseña actual</label>
+        <input type="password" id="cp-current" placeholder="Tu contraseña actual"/>
+      </div>
+      <div class="field">
+        <label>Nueva contraseña</label>
+        <input type="password" id="cp-new" placeholder="Mínimo 8 caracteres"/>
+      </div>
+      <div class="field">
+        <label>Confirmar nueva contraseña</label>
+        <input type="password" id="cp-confirm" placeholder="Repetí la nueva contraseña"/>
+      </div>
+      <button class="btn btn-sm" onclick="changePassword()">Actualizar contraseña</button>
+    </div>
+
+    <div class="section-title" style="color:var(--error)">Zona de peligro</div>
+    <div class="change-pass-form" style="max-width:420px;border-color:rgba(255,92,106,0.25)">
+      <p style="font-size:14px;color:var(--muted);margin-bottom:16px">Desactivar tu cuenta suspende el acceso al portal. Tus contratos siguen vigentes. Podés reactivarla contactando a soporte.</p>
+      <button class="btn btn-sm" style="background:rgba(255,92,106,0.15);color:var(--error);border:1px solid rgba(255,92,106,0.3)" onclick="desactivarCuenta()">Desactivar mi cuenta</button>
+    </div>
+  </section>
+</main>
+
+<!-- MODAL EDITAR TICKET -->
+<div class="modal-overlay" id="modal-edit-ticket">
+  <div class="modal" style="max-width:480px">
+    <button class="modal-close" onclick="closeEditTicket()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <h2>Editar Ticket</h2>
+    <div class="subtitle" id="edit-ticket-subtitle"></div>
+    <div class="success-flash" id="edit-ok"></div>
+    <div class="error-flash"   id="edit-err"></div>
+    <input type="hidden" id="edit-ticket-id"/>
+    <div class="field" style="margin-top:16px">
+      <label>Asunto</label>
+      <input type="text" id="edit-asunto" placeholder="Asunto del ticket"/>
+    </div>
+    <div class="field">
+      <label>Detalle</label>
+      <textarea id="edit-detalle" placeholder="Describí el problema o consulta..."></textarea>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:4px">
+      <button class="btn btn-sm" onclick="saveEditTicket()">Guardar</button>
+      <button class="btn btn-sm btn-outline" onclick="closeEditTicket()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL MANUAL -->
+<div class="modal-overlay" id="modal-manual">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <h2 id="modal-title">Manual del equipo</h2>
+    <div class="subtitle" id="modal-model"></div>
+    <div id="modal-content"></div>
+  </div>
+</div>
+
+<script src="../js/dashboard.js"></script>
+</body>
+</html>

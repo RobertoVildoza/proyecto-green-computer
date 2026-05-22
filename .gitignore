@@ -1,0 +1,23 @@
+# Secretos — NUNCA subir al repositorio
+backend/.env
+.env
+
+# Python
+backend/venv/
+backend/__pycache__/
+backend/routers/__pycache__/
+backend/utils/__pycache__/
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+
+# Node / Playwright
+node_modules/
+playwright-report/
+test-results/
+.playwright/
+
+# OS
+.DS_Store
+Thumbs.db

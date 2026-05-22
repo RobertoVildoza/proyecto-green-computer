@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Green Computer – Portal del Cliente</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/login.css">
+</head>
+<body>
+
+<section class="left-panel">
+  <div class="grid-bg"></div>
+  <div class="brand">
+    <div class="brand-logo">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#4dffa0" stroke-width="1.8">
+        <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/>
+        <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+      </svg>
+      <div class="brand-name">Green<span>Computer</span></div>
+    </div>
+    <div class="tagline">Tecnología Sustentable</div>
+  </div>
+  <h1 class="hero-title">
+    Alquilá tech.<br>
+    <span class="accent">Cuidá el</span><br>
+    planeta.
+  </h1>
+  <p class="hero-sub">
+    Accedé a equipos de alta gama sin generar residuos electrónicos.
+    Cada alquiler reduce activamente tu huella de carbono.
+  </p>
+  <div class="stats">
+    <div class="stat"><div class="stat-num">2.4 T</div><div class="stat-label">CO&#8322; evitado</div></div>
+    <div class="stat"><div class="stat-num">1.8K</div><div class="stat-label">Equipos activos</div></div>
+    <div class="stat"><div class="stat-num">98%</div><div class="stat-label">Satisfacción</div></div>
+  </div>
+  <div class="leaf-deco"></div>
+</section>
+
+<section class="right-panel">
+  <div class="login-box">
+
+    <!-- VIEW: LOGIN -->
+    <div class="view active" id="view-login">
+      <h2>Bienvenido</h2>
+      <p>Ingresá con tu cuenta de cliente</p>
+      <div class="error-msg" id="login-error"></div>
+      <div class="field">
+        <label>Usuario o Email</label>
+        <input type="text" id="login-user" placeholder="usuario@empresa.com" autocomplete="username"/>
+      </div>
+      <div class="field">
+        <label>Contraseña</label>
+        <div class="password-wrap">
+          <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password"/>
+          <button class="toggle-pass" type="button" onclick="togglePass('login-pass', this)" aria-label="Mostrar contraseña">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="eye-icon"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+      </div>
+      <button class="btn" id="btn-login" onclick="doLogin()">Ingresar</button>
+
+      <div class="divider"><span>o continuá con</span></div>
+
+      <button class="btn btn-google" id="btn-google" onclick="loginConGoogle()">
+        <svg width="18" height="18" viewBox="0 0 24 24" style="margin-right:8px;flex-shrink:0">
+          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/>
+          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+        </svg>
+        Iniciar sesión con Google
+      </button>
+
+      <div class="link-row">
+        <a onclick="show('view-forgot')">¿Olvidaste tu contraseña?</a>
+        <span style="margin:0 8px;opacity:.4">|</span>
+        <a onclick="show('view-register')">Crear cuenta nueva</a>
+      </div>
+    </div>
+
+    <!-- VIEW: REGISTRO -->
+    <div class="view" id="view-register">
+      <h2>Crear cuenta</h2>
+      <p>Completá tus datos para registrarte</p>
+      <div class="error-msg" id="register-error"></div>
+      <div class="success-msg" id="register-ok"></div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div class="field">
+          <label>Nombre *</label>
+          <input type="text" id="reg-nombre" placeholder="Juan"/>
+        </div>
+        <div class="field">
+          <label>Apellido *</label>
+          <input type="text" id="reg-apellido" placeholder="Pérez"/>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Email *</label>
+        <input type="email" id="reg-email" placeholder="juan@empresa.com"/>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div class="field">
+          <label>Teléfono</label>
+          <input type="text" id="reg-telefono" placeholder="261 555-0000"/>
+        </div>
+        <div class="field">
+          <label>Empresa</label>
+          <input type="text" id="reg-empresa" placeholder="Mi Empresa S.A."/>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Nombre de usuario *</label>
+        <input type="text" id="reg-username" placeholder="juanperez" autocomplete="username"/>
+      </div>
+
+      <div class="field">
+        <label>Contraseña * <small style="opacity:.6">(mínimo 8 caracteres)</small></label>
+        <div class="password-wrap">
+          <input type="password" id="reg-pass" placeholder="••••••••" oninput="checkStrength(this.value)"/>
+          <button class="toggle-pass" type="button" onclick="togglePass('reg-pass', this)" aria-label="Mostrar contraseña">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="eye-icon"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+        <div class="strength-bar">
+          <div class="strength-seg" id="s1"></div>
+          <div class="strength-seg" id="s2"></div>
+          <div class="strength-seg" id="s3"></div>
+          <div class="strength-seg" id="s4"></div>
+        </div>
+        <div class="strength-label" id="strength-label"></div>
+      </div>
+
+      <div class="field">
+        <label>Confirmar contraseña *</label>
+        <div class="password-wrap">
+          <input type="password" id="reg-confirm" placeholder="Repetí la contraseña"/>
+          <button class="toggle-pass" type="button" onclick="togglePass('reg-confirm', this)" aria-label="Mostrar contraseña">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="eye-icon"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <button class="btn" id="btn-register" onclick="doRegister()">Crear cuenta</button>
+      <button class="btn btn-ghost" type="button" onclick="show('view-login')">Volver al login</button>
+    </div>
+
+    <!-- VIEW: FORGOT PASSWORD -->
+    <div class="view" id="view-forgot">
+      <h2>Recuperar clave</h2>
+      <p>Te enviamos un código a tu email registrado</p>
+      <div class="error-msg" id="forgot-error"></div>
+      <div class="success-msg" id="forgot-ok"></div>
+      <div class="field">
+        <label>Email registrado</label>
+        <input type="email" id="forgot-email" placeholder="usuario@empresa.com"/>
+      </div>
+      <button class="btn" id="btn-forgot" onclick="doForgot()">Enviar código</button>
+      <button class="btn btn-ghost" type="button" onclick="show('view-login')">Volver al login</button>
+    </div>
+
+    <!-- VIEW: RESET PASSWORD -->
+    <div class="view" id="view-reset">
+      <h2>Nueva contraseña</h2>
+      <p>Ingresá el código de 6 dígitos enviado a tu email</p>
+      <div class="error-msg" id="reset-error"></div>
+      <div class="field">
+        <label>Código de verificación</label>
+        <input type="text" id="reset-code" placeholder="123456" maxlength="6" inputmode="numeric"/>
+      </div>
+      <div class="field">
+        <label>Nueva contraseña</label>
+        <div class="password-wrap">
+          <input type="password" id="new-pass" placeholder="Mínimo 8 caracteres" oninput="checkStrength(this.value)"/>
+          <button class="toggle-pass" type="button" onclick="togglePass('new-pass', this)" aria-label="Mostrar contraseña">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="eye-icon"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+        <div class="strength-bar">
+          <div class="strength-seg" id="s1"></div>
+          <div class="strength-seg" id="s2"></div>
+          <div class="strength-seg" id="s3"></div>
+          <div class="strength-seg" id="s4"></div>
+        </div>
+        <div class="strength-label" id="strength-label"></div>
+      </div>
+      <div class="field">
+        <label>Confirmar contraseña</label>
+        <div class="password-wrap">
+          <input type="password" id="confirm-pass" placeholder="Repetí la contraseña"/>
+          <button class="toggle-pass" type="button" onclick="togglePass('confirm-pass', this)" aria-label="Mostrar contraseña">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="eye-icon"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+      </div>
+      <button class="btn" id="btn-reset" onclick="doReset()">Cambiar contraseña</button>
+      <button class="btn btn-ghost" type="button" onclick="show('view-login')">Volver al login</button>
+    </div>
+
+  </div>
+</section>
+<script src="https://cdn.auth0.com/js/auth0-spa-js/2.0/auth0-spa-js.production.js"></script>
+<script src="js/login.js"></script>
+</body>
+</html>
