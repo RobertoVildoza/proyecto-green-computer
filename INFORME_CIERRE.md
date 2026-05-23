@@ -196,7 +196,7 @@ Railway gestiona las variables de entorno de forma segura a través de su panel,
 ## 7. Instrucciones de Entrega
 
 - **Repositorio:** https://github.com/RobertoVildoza/proyecto-green-computer
-- **Backend en producción:** `https://<tu-servicio>.railway.app`
-- **Frontend en producción:** `https://<tu-proyecto>.vercel.app`
+- **Backend en producción:** `https://proyecto-green-computer-production.up.railway.app`
+- **Frontend en producción:** `https://proyecto-green-computer.vercel.app`
 - **Video de prueba UI automatizada:** ver carpeta `playwright-report/` o adjunto separado
-- **Documentación API:** `https://<tu-servicio>.railway.app/docs`
+- **Documentación API:** `https://proyecto-green-computer-production.up.railway.app/docs`

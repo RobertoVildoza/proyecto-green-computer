@@ -2,6 +2,16 @@
 
 Portal web para clientes de **Green Computer**, empresa de alquiler de tecnología sustentable. Permite gestionar contratos, equipos, tickets de soporte y visualizar la huella de carbono ahorrada.
 
+## 🌐 Demo en producción
+
+| | URL |
+|---|---|
+| **Frontend** | https://proyecto-green-computer.vercel.app |
+| **API** | https://proyecto-green-computer-production.up.railway.app |
+| **Documentación API** | https://proyecto-green-computer-production.up.railway.app/docs |
+
+**Usuario de prueba:** `prueba` / `Test1234!`
+
 ---
 
 ## Índice
@@ -37,8 +47,8 @@ Portal web para clientes de **Green Computer**, empresa de alquiler de tecnolog�
 ```
 ┌─────────────────┐        ┌──────────────────┐        ┌──────────┐
 │  Frontend       │  HTTP  │  Backend         │  SQL   │  MySQL   │
-│  (Vercel)       │◄──────►│  FastAPI         │◄──────►│  (Railway│
-│  HTML/CSS/JS    │        │  (Railway)       │        │   DB)    │
+│  (Vercel)       │◄──────►│  FastAPI         │◄──────►│ (Railway)│
+│  HTML/CSS/JS    │        │  (Railway)       │        │          │
 └─────────────────┘        └──────────────────┘        └──────────┘
                                     │
                                     ▼
@@ -107,29 +117,15 @@ El frontend queda en `http://localhost:5500`.
 
 ## Instalación con Docker
 
-### Requisitos
-
-- Docker Desktop instalado
-
-### Levantar todo con un comando
-
 ```bash
-# Desde la raíz del proyecto
 docker compose up --build
 ```
 
-Esto levanta:
-- **MySQL** en el puerto 3306 (inicializado con `database_setup.sql`)
-- **Backend FastAPI** en el puerto 8000
+Levanta backend FastAPI en el puerto 8000 y MySQL en el 3306, inicializado con `database_setup.sql`.
 
-Para detener:
 ```bash
-docker compose down
-```
-
-Para borrar también los datos de la base de datos:
-```bash
-docker compose down -v
+docker compose down        # detener
+docker compose down -v     # detener y borrar datos
 ```
 
 ---
@@ -138,156 +134,84 @@ docker compose down -v
 
 ### Backend en Railway
 
-1. Crear cuenta en [railway.app](https://railway.app)
-2. Nuevo proyecto → **Deploy from GitHub repo** → seleccionar este repositorio
-3. Railway detecta el `Dockerfile` automáticamente
-4. Agregar un servicio **MySQL** desde el panel de Railway
-5. En el servicio del backend, ir a **Variables** y cargar todas las del `.env.example`:
-   - `DB_HOST` → hostname que te da Railway para el MySQL
-   - `DB_PORT` → puerto que te da Railway (normalmente no es 3306)
-   - `DB_NAME`, `DB_USER`, `DB_PASSWORD` → credenciales del MySQL de Railway
-   - `JWT_SECRET`, `CARBON_API_KEY`, etc.
-6. En **Settings → Networking** → generar un dominio público
-7. Correr el script de base de datos conectándose al MySQL de Railway desde un cliente (TablePlus, DBeaver, etc.) usando las credenciales del panel
+1. [railway.app](https://railway.app) → New Project → Deploy from GitHub
+2. Agregar servicio MySQL desde el panel
+3. Cargar variables de entorno del `.env.example` en la pestaña Variables
+4. Ejecutar `database_setup.sql` conectándose al MySQL de Railway con Workbench o similar
 
 ### Frontend en Vercel
 
-1. Crear cuenta en [vercel.com](https://vercel.com)
-2. **Add New Project** → importar el mismo repositorio de GitHub
-3. En la configuración del proyecto:
-   - **Root Directory**: `frontend`
-   - **Framework Preset**: Other
-4. En `frontend/js/dashboard.js` y `frontend/js/login.js`, reemplazar `http://localhost:8000` por la URL pública de Railway
-5. Deploy → Vercel genera una URL pública automáticamente
+1. [vercel.com](https://vercel.com) → New Project → importar repo
+2. Root Directory: `frontend`
+3. Deploy
 
 ---
 
 ## Variables de entorno
 
-Todas las variables necesarias están documentadas en `.env.example`.
+Ver `.env.example` para la lista completa.
 
 | Variable | Descripción | Requerida |
 |----------|-------------|-----------|
 | `DB_HOST` | Host de MySQL | ✅ |
-| `DB_PORT` | Puerto de MySQL (default 3306) | ✅ |
+| `DB_PORT` | Puerto de MySQL | ✅ |
 | `DB_NAME` | Nombre de la base de datos | ✅ |
 | `DB_USER` | Usuario de MySQL | ✅ |
 | `DB_PASSWORD` | Contraseña de MySQL | ✅ |
-| `JWT_SECRET` | Clave secreta para firmar tokens JWT | ✅ |
-| `JWT_EXPIRE_MINUTES` | Duración del token en minutos (default 480) | ✅ |
-| `CARBON_API_KEY` | API key de Climatiq para cálculo de CO2 | ⚠️ opcional |
-| `AUTH0_DOMAIN` | Dominio de Auth0 para Google OAuth | ⚠️ opcional |
+| `JWT_SECRET` | Clave secreta para tokens JWT | ✅ |
+| `CARBON_API_KEY` | API key de Climatiq | ⚠️ opcional |
+| `AUTH0_DOMAIN` | Dominio de Auth0 | ⚠️ opcional |
 | `AUTH0_CLIENT_ID` | Client ID de Auth0 | ⚠️ opcional |
 | `AUTH0_CLIENT_SECRET` | Client Secret de Auth0 | ⚠️ opcional |
-
-> ⚠️ Sin `CARBON_API_KEY`, el cálculo de huella de carbono usa valores locales estimados.  
-> Sin las variables de Auth0, el login con Google no está disponible.
 
 ---
 
 ## API — Endpoints
 
-La documentación interactiva completa está en `/docs` (Swagger UI) y `/redoc`.
+Documentación completa en `/docs` (Swagger UI).
 
 ### Autenticación
 
-| Método | Endpoint | Descripción | Auth |
-|--------|----------|-------------|------|
-| `POST` | `/auth/login` | Login con usuario y contraseña | ❌ |
-| `POST` | `/auth/register` | Registro de nueva cuenta | ❌ |
-| `POST` | `/auth/login-google` | Login con Google (Auth0) | ❌ |
-| `POST` | `/auth/forgot-password` | Solicitar código de recuperación | ❌ |
-| `POST` | `/auth/reset-password` | Restablecer contraseña con código | ❌ |
-| `POST` | `/auth/change-password` | Cambiar contraseña (usuario logueado) | ✅ |
+| Método | Endpoint | Descripción |
+|--------|----------|-------------|
+| `POST` | `/auth/login` | Login con usuario y contraseña |
+| `POST` | `/auth/register` | Registro de nueva cuenta |
+| `POST` | `/auth/login-google` | Login con Google (Auth0) |
+| `POST` | `/auth/forgot-password` | Solicitar código de recuperación |
+| `POST` | `/auth/reset-password` | Restablecer contraseña |
+| `POST` | `/auth/change-password` | Cambiar contraseña *(auth)* |
 
-### Contratos
-
-| Método | Endpoint | Descripción | Auth |
-|--------|----------|-------------|------|
-| `GET` | `/contratos/mis-contratos` | Lista contratos del usuario | ✅ |
-
-### Equipos
-
-| Método | Endpoint | Descripción | Auth |
-|--------|----------|-------------|------|
-| `GET` | `/equipos/mis-equipos` | Lista equipos alquilados | ✅ |
-
-### Tickets de soporte
-
-| Método | Endpoint | Descripción | Auth |
-|--------|----------|-------------|------|
-| `GET` | `/tickets/mis-tickets` | Lista tickets del usuario | ✅ |
-| `POST` | `/tickets/nuevo` | Crear un nuevo ticket | ✅ |
-
-### Huella de carbono
-
-| Método | Endpoint | Descripción | Auth |
-|--------|----------|-------------|------|
-| `GET` | `/carbono/mi-huella` | Calcula CO2 ahorrado del usuario | ✅ |
-
-### Perfil
-
-| Método | Endpoint | Descripción | Auth |
-|--------|----------|-------------|------|
-| `GET` | `/perfil/me` | Datos del usuario actual | ✅ |
-
-### Sistema
+### Recursos *(requieren token)*
 
 | Método | Endpoint | Descripción |
 |--------|----------|-------------|
-| `GET` | `/health` | Estado de la API y la base de datos |
-| `GET` | `/` | Info de la versión |
-
-> **Autenticación**: todos los endpoints marcados con ✅ requieren header  
-> `Authorization: Bearer <token>` obtenido al hacer login.
+| `GET` | `/contratos/mis-contratos` | Contratos del usuario |
+| `GET` | `/equipos/mis-equipos` | Equipos alquilados |
+| `GET` | `/tickets/mis-tickets` | Tickets de soporte |
+| `POST` | `/tickets/nuevo` | Crear ticket |
+| `GET` | `/carbono/mi-huella` | Huella de CO₂ |
+| `GET` | `/perfil/me` | Perfil del usuario |
+| `GET` | `/health` | Estado de la API |
 
 ---
 
 ## Tests
 
-### Requisitos
-
 ```bash
 npm install
 npx playwright install chromium
+npx playwright test                              # todos los tests
+npx playwright test tests/actividad-3-regresion/ # solo regresión
+npx playwright show-report                       # ver reporte HTML
 ```
 
-El backend debe estar corriendo en `http://localhost:8000` y el frontend en `http://localhost:5500`.
-
-### Correr todos los tests
-
-```bash
-npm test
-```
-
-### Correr solo regresión
-
-```bash
-npx playwright test tests/actividad-3-regresion/
-```
-
-### Ver reporte HTML
-
-```bash
-npx playwright show-report
-```
-
-### Suite de tests incluida
-
-| Actividad | Tipo | Tests |
-|-----------|------|-------|
-| actividad-1 | Login UI | `login.spec.js` |
+| Suite | Tipo | Archivo |
+|-------|------|---------|
+| actividad-1 | E2E Login UI | `login.spec.js` |
 | actividad-2 | API pura | `api.spec.js` |
-| actividad-2 | Híbrida (API + UI) | `hibrida.spec.js` |
+| actividad-2 | Híbrida | `hibrida.spec.js` |
 | actividad-2 | Mocking | `mocking.spec.js` |
 | actividad-3 | **Regresión** | `regresion.spec.js` |
-
-Los tests de regresión cubren:
-- FC-01: Login (credenciales válidas, inválidas, campos vacíos)
-- FC-02: Logout (limpieza de localStorage, redirección)
-- FC-03: Registro (datos válidos, login del nuevo usuario)
-- FC-04: Validaciones de formulario (contraseña corta, no coincide, campos vacíos)
-- FC-05: Protección de rutas autenticadas (sin token, con token, token malformado)
 
 ---
 
@@ -296,41 +220,24 @@ Los tests de regresión cubren:
 ```
 proyecto-green-computer/
 ├── backend/
-│   ├── main.py               # App FastAPI, middlewares, rutas principales
-│   ├── database.py           # Conexión MySQL y helpers query/execute
-│   ├── requirements.txt      # Dependencias Python
-│   ├── seed.py               # Script para poblar datos de prueba
-│   ├── routers/
-│   │   ├── auth.py           # Login, registro, OAuth, recuperación
-│   │   ├── contratos.py      # Contratos de alquiler
-│   │   ├── equipos.py        # Equipos alquilados
-│   │   ├── tickets.py        # Tickets de soporte
-│   │   ├── carbono.py        # Huella de carbono (Climatiq API)
-│   │   └── perfil.py         # Perfil del usuario
-│   └── utils/
-│       ├── auth.py           # JWT helpers, hash, validación
-│       └── auth0.py          # Integración Auth0 / Google OAuth
+│   ├── main.py
+│   ├── database.py
+│   ├── requirements.txt
+│   ├── routers/          # auth, contratos, equipos, tickets, carbono, perfil
+│   └── utils/            # JWT, Auth0
 ├── frontend/
-│   ├── index.html            # Login y registro
-│   ├── callback.html         # Callback OAuth de Auth0
+│   ├── index.html
+│   ├── callback.html
 │   ├── pages/
-│   │   └── dashboard.html    # Dashboard principal del cliente
-│   ├── js/
-│   │   ├── login.js          # Lógica de login/registro
-│   │   └── dashboard.js      # Lógica del dashboard
-│   └── css/
-│       └── ...               # Estilos del portal
+│   └── js/               # login.js, dashboard.js
 ├── tests/
-│   ├── setup/                # Health check setup
-│   ├── actividad-1/          # Tests E2E de login
-│   ├── actividad-2/          # Tests API, mocking, híbridos
-│   └── actividad-3-regresion/ # Suite de regresión completa
-├── database_setup.sql        # Schema + datos de ejemplo
-├── Dockerfile                # Imagen Docker del backend
-├── docker-compose.yml        # Stack completo local (backend + MySQL)
-├── railway.toml              # Configuración de despliegue en Railway
-├── .env.example              # Plantilla de variables de entorno
-├── .gitignore
-├── package.json              # Dependencias Playwright
-└── playwright.config.js      # Configuración de tests E2E
+│   ├── actividad-1/
+│   ├── actividad-2/
+│   └── actividad-3-regresion/
+├── database_setup.sql
+├── Dockerfile
+├── docker-compose.yml
+├── railway.toml
+├── .env.example
+└── README.md
 ```
