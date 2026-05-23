@@ -1,4 +1,4 @@
-const API = 'http://localhost:8000';
+const API = 'https://proyecto-green-computer-production.up.railway.app';
 
 // ── AUTH0 ─────────────────────────────────────────────────
 const auth0Config = {

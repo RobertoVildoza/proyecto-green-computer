@@ -1,4 +1,4 @@
-const API = 'http://localhost:8000';
+const API = 'https://proyecto-green-computer-production.up.railway.app';
 
 let token = null;
 let currentUser = {};
