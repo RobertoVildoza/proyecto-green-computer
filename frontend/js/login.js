@@ -5,7 +5,7 @@ const auth0Config = {
   domain: "dev-syfyk7fe0keqki83.us.auth0.com",
   clientId: "zjQuX10YQZNO7pHt9GGYKiuKWFdGXHn9",
   authorizationParams: {
-    redirect_uri: "http://localhost:5500/callback.html"
+    redirect_uri: `${window.location.origin}/callback.html`
   }
 };
 
