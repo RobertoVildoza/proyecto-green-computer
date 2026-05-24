@@ -1,4 +1,6 @@
-const API = 'https://proyecto-green-computer-production.up.railway.app';
+const API = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+  ? 'http://localhost:8000'
+  : 'https://proyecto-green-computer-production.up.railway.app';
 
 // ── AUTH0 ─────────────────────────────────────────────────
 const auth0Config = {
