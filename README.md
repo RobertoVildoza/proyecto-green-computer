@@ -303,6 +303,24 @@ npx playwright show-report
 | FC-04 | Validaciones de formulario | 3 | ✅ PASS |
 | FC-05 | Protección de rutas autenticadas | 4 | ✅ PASS |
 
+### Tests unitarios — pytest (CRUD de Tickets)
+
+**Requisitos:** backend con venv activo y MySQL corriendo con la base de datos inicializada.
+
+```bash
+cd backend
+venv\Scripts\activate
+pytest test_tickets.py -v
+```
+
+| Módulo | Casos | Descripción | Resultado |
+|--------|-------|-------------|-----------|
+| CREATE | CP-01 a CP-07 | Validaciones de tipo, asunto, campos obligatorios y trim | ✅ 7/7 PASS |
+| READ | CP-08 a CP-10 | Listado de tickets, estructura de campos, lista vacía | ✅ 3/3 PASS |
+| UPDATE | CP-11 a CP-15 | Edición, ticket inexistente, estado cerrado/en proceso | ✅ 5/5 PASS |
+| DELETE | CP-16 a CP-20 | Eliminación, tickets en proceso, smoke test | ✅ 5/5 PASS |
+| AISLAMIENTO | CP-21 | Cliente B no puede operar tickets de Cliente A | ✅ 1/1 PASS |
+| **TOTAL** | **CP-01 a CP-21** | **Suite completa** | **✅ 21/21 PASS** |
 ---
 
 ## 📁 Estructura del proyecto
