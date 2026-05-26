@@ -81,6 +81,8 @@ Se desarrollaron tres suites de tests con Playwright:
 
 **Entregable:** Suite de tests con reportes HTML y evidencia en video/screenshots
 
+Además de la suite de regresión con Playwright, el proyecto cuenta con 21 tests unitarios automatizados con pytest que cubren el CRUD completo del módulo de Tickets (CP-01 a CP-21, 21/21 PASS). Estos tests cubren operaciones CREATE, READ, UPDATE, DELETE y aislamiento entre clientes.
+
 ---
 
 ### Etapa 5 — Release Candidate, Regresión y Despliegue
@@ -139,7 +141,7 @@ dashboard.html             /contratos/*               usuario_portal
 |---------|-------|
 | Endpoints de API | 12 |
 | Tablas en la base de datos | 6 |
-| Tests automatizados | 30+ |
+| Tests automatizados | 38 tests Playwright + 21 tests pytest = 59 tests total |
 | Suites de testing | 5 |
 | Tipos de tests aplicados | E2E · API · Mocking · Híbrido · Regresión |
 | Herramientas de testing | Playwright · pytest |
